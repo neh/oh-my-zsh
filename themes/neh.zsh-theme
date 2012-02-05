@@ -1,7 +1,10 @@
-PROMPT='$(git_prompt_ahead)$(git_prompt_info)$(git_prompt_status) %{$FX[bold]%}%{$FG[196]%}%(?..%?%{$FX[reset]%})%{$reset_color%}$BG_JOBS$PROMPT_CHAR%{$reset_color%} '
+PROMPT='$(git_prompt_info)$(git_prompt_status) %{$FX[bold]%}%{$FG[196]%}%(?..%?%{$FX[reset]%})%{$reset_color%}$BG_JOBS$PROMPT_CHAR%{$reset_color%} $(vi_mode_prompt_info)'
 RPS1='%{$PWD_COLOUR%}%3(c.…/.)%2c %{$USER_COLOUR%}%n@%{$HOST_COLOUR%}%m%{$reset_color%}'
 
-PROMPT_CHAR='⬤'
+# vi mode indicator
+MODE_INDICATOR="%{$FG[196]%}%{$FX[bold]%}!%{$FX[no-bold]%}%{$reset_color%}"
+
+PROMPT_CHAR='➤'
 
 # Background job(s) indicator
 add-zsh-hook precmd jobs_precmd_hook
@@ -38,18 +41,14 @@ case "$SSH_CONNECTION" in
 esac
 
 function git_prompt_info() {
-  stat=$(git status --porcelain -s -b 2>/dev/null) || return
-  branch=$(current_branch)
-  if [[ $branch == '' ]]; then branch='⌥'; fi
-  # Just for fun:
-  if [[ $stat =~ "Initial commit" && $branch == 'master' ]]; then branch="%{$FG[033]%}shiny%{$reset_color%}"; fi
-
+  ref=$(git symbolic-ref HEAD 2> /dev/null) || return
   STASH=$(git stash list 2> /dev/null | wc -l)
   if [[ $STASH -gt 0 ]]; then
     chars=(¹ ² ³ ⁴ ⁵ ⁶ ⁷ ⁸ ⁹)
+    #STASHCOUNT="$STASH:"
     STASHCOUNT="$chars[$STASH]"
   fi
-  echo "$STASHCOUNT$ZSH_THEME_GIT_PROMPT_PREFIX$(parse_git_dirty)$branch$ZSH_THEME_GIT_PROMPT_SUFFIX"
+  echo "$STASHCOUNT$ZSH_THEME_GIT_PROMPT_PREFIX$(parse_git_dirty)${ref#refs/heads/}$ZSH_THEME_GIT_PROMPT_SUFFIX"
 }
 
 parse_git_dirty() {
@@ -71,9 +70,6 @@ ZSH_THEME_GIT_PROMPT_SUFFIX="%{$FX[no-bold]%}%{$FX[no-italic]%}"
 ZSH_THEME_GIT_PROMPT_CLEAN="%{$GIT_CLEAN_COLOR%}"
 #ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[red]%} ⚡%{$fg[yellow]%}"
 ZSH_THEME_GIT_PROMPT_DIRTY="%{$FX[italic]%}%{$FX[bold]%}"
-
-#⬆ ⇪ ⇮ ➠ ⇡ ⇑ ⇧ ⬀ ⇗ ↥ ↨ ↕ ↗ ↑ ⬍ ⇅
-ZSH_THEME_GIT_PROMPT_AHEAD="%{$FG[077]%}%{$FX[italic]%}↕%{$FX[no-italic]%}"
 
 ZSH_THEME_GIT_PROMPT_ADDED="%{$FG[082]%}✚"
 #ZSH_THEME_GIT_PROMPT_MODIFIED="%{$FG[226]%}✎"
