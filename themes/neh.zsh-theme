@@ -41,10 +41,11 @@ case "$SSH_CONNECTION" in
 esac
 
 function git_prompt_info() {
-  ref=$(git status --porcelain -s -b 2>/dev/null) || return
-  branch=$(echo $ref | head -n 1 | tr -d '# ')
-  if [[ $branch =~ "nobranch" ]]; then branch='⌥'; fi
-  if [[ $branch =~ "Initialcommit" ]]; then branch='★'; fi
+  stat=$(git status --porcelain -s -b 2>/dev/null) || return
+  branch=$(current_branch)
+  if [[ $branch == '' ]]; then branch='⌥'; fi
+  # Just for fun:
+  if [[ $stat =~ "Initial commit" && $branch == 'master' ]]; then branch="%{$FG[033]%}shiny%{$reset_color%}"; fi
 
   STASH=$(git stash list 2> /dev/null | wc -l)
   if [[ $STASH -gt 0 ]]; then
