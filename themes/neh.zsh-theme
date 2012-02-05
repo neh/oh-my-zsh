@@ -41,14 +41,17 @@ case "$SSH_CONNECTION" in
 esac
 
 function git_prompt_info() {
-  ref=$(git symbolic-ref HEAD 2> /dev/null) || return
+  ref=$(git status --porcelain -s -b 2>/dev/null) || return
+  branch=$(echo $ref | head -n 1 | tr -d '# ')
+  if [[ $branch =~ "nobranch" ]]; then branch='⌥'; fi
+  if [[ $branch =~ "Initialcommit" ]]; then branch='★'; fi
+
   STASH=$(git stash list 2> /dev/null | wc -l)
   if [[ $STASH -gt 0 ]]; then
     chars=(¹ ² ³ ⁴ ⁵ ⁶ ⁷ ⁸ ⁹)
-    #STASHCOUNT="$STASH:"
     STASHCOUNT="$chars[$STASH]"
   fi
-  echo "$STASHCOUNT$ZSH_THEME_GIT_PROMPT_PREFIX$(parse_git_dirty)${ref#refs/heads/}$ZSH_THEME_GIT_PROMPT_SUFFIX"
+  echo "$STASHCOUNT$ZSH_THEME_GIT_PROMPT_PREFIX$(parse_git_dirty)$branch$ZSH_THEME_GIT_PROMPT_SUFFIX"
 }
 
 parse_git_dirty() {
