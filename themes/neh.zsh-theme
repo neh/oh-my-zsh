@@ -1,4 +1,4 @@
-PROMPT='$(git_prompt_info)$(git_prompt_status) %{$FX[bold]%}%{$FG[196]%}%(?..%?%{$FX[reset]%})%{$reset_color%}$BG_JOBS$PROMPT_CHAR%{$reset_color%} $(vi_mode_prompt_info)'
+PROMPT='$(git_prompt_ahead)$(git_prompt_info)$(git_prompt_status) %{$FX[bold]%}%{$FG[196]%}%(?..%?%{$FX[reset]%})%{$reset_color%}$BG_JOBS$PROMPT_CHAR%{$reset_color%} $(vi_mode_prompt_info)'
 RPS1='%{$PWD_COLOUR%}%3(c.…/.)%2c %{$USER_COLOUR%}%n@%{$HOST_COLOUR%}%m%{$reset_color%}'
 
 # vi mode indicator
@@ -74,6 +74,9 @@ ZSH_THEME_GIT_PROMPT_SUFFIX="%{$FX[no-bold]%}%{$FX[no-italic]%}"
 ZSH_THEME_GIT_PROMPT_CLEAN="%{$GIT_CLEAN_COLOR%}"
 #ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[red]%} ⚡%{$fg[yellow]%}"
 ZSH_THEME_GIT_PROMPT_DIRTY="%{$FX[italic]%}%{$FX[bold]%}"
+
+#⬆ ⇪ ⇮ ➠ ⇡ ⇑ ⇧ ⬀ ⇗ ↥ ↨ ↕ ↗ ↑ ⬍ ⇅
+ZSH_THEME_GIT_PROMPT_AHEAD="%{$FG[077]%}%{$FX[italic]%}↕%{$FX[no-italic]%}"
 
 ZSH_THEME_GIT_PROMPT_ADDED="%{$FG[082]%}✚"
 #ZSH_THEME_GIT_PROMPT_MODIFIED="%{$FG[226]%}✎"
