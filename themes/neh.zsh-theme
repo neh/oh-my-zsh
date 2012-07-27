@@ -1,7 +1,7 @@
-PROMPT='$(git_prompt_ahead)$(git_prompt_info)$(git_prompt_status) %{$FX[bold]%}%{$FG[196]%}%(?..%?%{$FX[reset]%})%{$reset_color%}$BG_JOBS$PROMPT_CHAR%{$reset_color%}'
+PROMPT='$(git_prompt_ahead)$(git_prompt_info)$(git_prompt_status) %{$FX[bold]%}%{$FG[196]%}%(?..%?%{$FX[reset]%})%{$reset_color%}$BG_JOBS$PROMPT_CHAR%{$reset_color%} '
 RPS1='%{$PWD_COLOUR%}%3(c.…/.)%2c %{$USER_COLOUR%}%n@%{$HOST_COLOUR%}%m%{$reset_color%}'
 
-PROMPT_CHAR='➤'
+PROMPT_CHAR='⬤'
 
 # Background job(s) indicator
 add-zsh-hook precmd jobs_precmd_hook
