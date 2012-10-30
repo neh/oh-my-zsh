@@ -46,7 +46,9 @@ function git_prompt_info() {
       branch="⌥ $branch";
   fi
   # Just for fun:
-  if [[ $stat =~ "Initial commit" && $branch == 'master' ]]; then branch="%{$FG[033]%}shiny%{$reset_color%}"; fi
+  if [[ $stat =~ "Initial commit" && $branch == 'master' ]]; then
+      branch="%{$FG[033]%}shiny%{$reset_color%}";
+  fi
 
   STASH=$(git stash list 2> /dev/null | wc -l)
   if [[ $STASH -gt 0 ]]; then
