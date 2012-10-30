@@ -79,7 +79,7 @@ ZSH_THEME_GIT_PROMPT_CLEAN="%{$GIT_CLEAN_COLOR%}"
 ZSH_THEME_GIT_PROMPT_DIRTY="%{$FX[italic]%}%{$FX[bold]%}"
 
 #⬆ ⇪ ⇮ ➠ ⇡ ⇑ ⇧ ⬀ ⇗ ↥ ↨ ↕ ↗ ↑ ⬍ ⇅
-ZSH_THEME_GIT_PROMPT_AHEAD="%{$FG[077]%}%{$FX[italic]%}↕%{$FX[no-italic]%}"
+ZSH_THEME_GIT_PROMPT_AHEAD="%{$FG[077]%}%{$FX[italic]%}↕ %{$FX[no-italic]%}"
 
 ZSH_THEME_GIT_PROMPT_ADDED="%{$FG[082]%}✚"
 #ZSH_THEME_GIT_PROMPT_MODIFIED="%{$FG[226]%}✎"
