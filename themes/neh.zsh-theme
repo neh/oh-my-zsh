@@ -55,7 +55,7 @@ function git_prompt_info() {
     chars=(¹ ² ³ ⁴ ⁵ ⁶ ⁷ ⁸ ⁹)
     STASHCOUNT="$chars[$STASH]"
   fi
-  echo "$STASHCOUNT$ZSH_THEME_GIT_PROMPT_PREFIX$(parse_git_dirty)$branch$ZSH_THEME_GIT_PROMPT_SUFFIX"
+  echo "$ZSH_THEME_GIT_PROMPT_PREFIX$(parse_git_dirty)$branch$ZSH_THEME_GIT_PROMPT_SUFFIX$STASHCOUNT"
 }
 
 parse_git_dirty() {
