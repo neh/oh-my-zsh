@@ -46,7 +46,7 @@ function term_width {
 %{$BG[236]%} %{$USER_COLOUR%}%n@%{$HOST_COLOUR%}%m %{$SEP_CHAR%} %{$PWD_COLOUR%}%4(c.…/.)%3c$(git_prompt_info)$(git_prompt_status)$(git_prompt_ahead)"
     PROMPT_SIZE=${#${(S%%)${PRE_PROMPT}//(\%([KF1]|)\{*\}|\%[Bbkf])}}
     PROMPT_LINE2="
-%{$FX[bold]%}%{$FG[196]%}%(?..%?%{$FX[reset]%})%{$reset_color%} $BG_JOBS$PROMPT_CHAR %{$reset_color%}"
+%{$reset_color%}%{$FX[bold]%}%{$FG[196]%}%(?..%?%{$FX[reset]%})%{$reset_color%} $BG_JOBS$PROMPT_CHAR %{$reset_color%}"
 
     (( TERMWIDTH = ${COLUMNS} - ${PROMPT_SIZE} + 1))
     FILL_SPACES="${(l.$TERMWIDTH.. .)}"
