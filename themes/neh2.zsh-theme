@@ -1,23 +1,3 @@
-RPROMPT='%{$FG[242]%}!%!%{$reset_color%}'
-
-PROMPT_CHAR='⬤'
-SEP_CHAR="%{$FG[239]%}│"
-
-add-zsh-hook precmd term_width
-function term_width {
-    local TERMWIDTH
-
-    PRE_PROMPT="
-%{$BG[236]%} %{$USER_COLOUR%}%n@%{$HOST_COLOUR%}%m %{$SEP_CHAR%} %{$PWD_COLOUR%}%4(c.…/.)%3c$(git_prompt_info)$(git_prompt_status)$(git_prompt_ahead)"
-    PROMPT_SIZE=${#${(S%%)${PRE_PROMPT}//(\%([KF1]|)\{*\}|\%[Bbkf])}}
-    PROMPT_LINE2="
-%{$FX[bold]%}%{$FG[196]%}%(?..%?%{$FX[reset]%})%{$reset_color%} $BG_JOBS$PROMPT_CHAR %{$reset_color%}"
-
-    (( TERMWIDTH = ${COLUMNS} - ${PROMPT_SIZE} + 1))
-    FILL_SPACES="${(l.$TERMWIDTH.. .)}"
-    PROMPT="$PRE_PROMPT$FILL_SPACES$PROMPT_LINE2"
-}
-
 # Background job(s) indicator
 add-zsh-hook precmd jobs_precmd_hook
 jobs_precmd_hook() {
@@ -51,6 +31,27 @@ case "$SSH_CONNECTION" in
     '') HOST_COLOUR="";;
     *) HOST_COLOUR="$FG[220]";;
 esac
+
+
+RPROMPT='%{$FG[242]%}!%!%{$reset_color%}'
+
+PROMPT_CHAR='⬤'
+SEP_CHAR="%{$FG[239]%}╿"
+
+add-zsh-hook precmd term_width
+function term_width {
+    local TERMWIDTH
+
+    PRE_PROMPT="
+%{$BG[236]%} %{$USER_COLOUR%}%n@%{$HOST_COLOUR%}%m %{$SEP_CHAR%} %{$PWD_COLOUR%}%4(c.…/.)%3c$(git_prompt_info)$(git_prompt_status)$(git_prompt_ahead)"
+    PROMPT_SIZE=${#${(S%%)${PRE_PROMPT}//(\%([KF1]|)\{*\}|\%[Bbkf])}}
+    PROMPT_LINE2="
+%{$FX[bold]%}%{$FG[196]%}%(?..%?%{$FX[reset]%})%{$reset_color%} $BG_JOBS$PROMPT_CHAR %{$reset_color%}"
+
+    (( TERMWIDTH = ${COLUMNS} - ${PROMPT_SIZE} + 1))
+    FILL_SPACES="${(l.$TERMWIDTH.. .)}"
+    PROMPT="$PRE_PROMPT$FILL_SPACES$PROMPT_LINE2"
+}
 
 function git_prompt_info() {
   stat=$(git status --porcelain -s -b 2>/dev/null) || return
