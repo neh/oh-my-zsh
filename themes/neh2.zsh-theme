@@ -1,9 +1,22 @@
-PROMPT='%{$BG[236]%} %{$USER_COLOUR%}%n@%{$HOST_COLOUR%}%m %{$SEP_CHAR%} %{$PWD_COLOUR%}%4(c.…/.)%3c$(git_prompt_info)$(git_prompt_status)$(git_prompt_ahead)%E%{$reset_color%}
-%{$FX[bold]%}%{$FG[196]%}%(?..%?%{$FX[reset]%})%{$reset_color%} $BG_JOBS$PROMPT_CHAR%{$reset_color%} '
 RPROMPT='%{$FG[242]%}!%!%{$reset_color%}'
 
 PROMPT_CHAR='⬤'
 SEP_CHAR="%{$FG[239]%}│"
+
+add-zsh-hook precmd term_width
+function term_width {
+    local TERMWIDTH
+
+    PRE_PROMPT="
+%{$BG[236]%} %{$USER_COLOUR%}%n@%{$HOST_COLOUR%}%m %{$SEP_CHAR%} %{$PWD_COLOUR%}%4(c.…/.)%3c$(git_prompt_info)$(git_prompt_status)$(git_prompt_ahead)"
+    PROMPT_SIZE=${#${(S%%)${PRE_PROMPT}//(\%([KF1]|)\{*\}|\%[Bbkf])}}
+    PROMPT_LINE2="
+%{$FX[bold]%}%{$FG[196]%}%(?..%?%{$FX[reset]%})%{$reset_color%} $BG_JOBS$PROMPT_CHAR %{$reset_color%}"
+
+    (( TERMWIDTH = ${COLUMNS} - ${PROMPT_SIZE} + 1))
+    FILL_SPACES="${(l.$TERMWIDTH.. .)}"
+    PROMPT="$PRE_PROMPT$FILL_SPACES$PROMPT_LINE2"
+}
 
 # Background job(s) indicator
 add-zsh-hook precmd jobs_precmd_hook
@@ -24,7 +37,7 @@ jobs_precmd_hook() {
 add-zsh-hook precmd pwd_colour
 function pwd_colour {
     if [[ -w $PWD ]]; then
-        PWD_COLOUR="$FG[246]"
+        PWD_COLOUR="$FG[249]"
     else
         PWD_COLOUR="$FG[196]"
     fi
@@ -57,7 +70,7 @@ function git_prompt_info() {
     chars=(¹ ² ³ ⁴ ⁵ ⁶ ⁷ ⁸ ⁹)
     STASHCOUNT="$chars[$STASH]"
   fi
-  echo " %{$SEP_CHAR%} $ZSH_THEME_GIT_PROMPT_PREFIX$(parse_git_dirty)$branch$ZSH_THEME_GIT_PROMPT_SUFFIX$STASHCOUNT"
+  echo " %{$SEP_CHAR%} $ZSH_THEME_GIT_PROMPT_PREFIX$(parse_git_dirty)$branch$ZSH_THEME_GIT_PROMPT_SUFFIX$STASHCOUNT "
 }
 
 parse_git_dirty() {
@@ -81,7 +94,7 @@ ZSH_THEME_GIT_PROMPT_CLEAN="%{$GIT_CLEAN_COLOR%}"
 ZSH_THEME_GIT_PROMPT_DIRTY="%{$FX[italic]%}%{$FX[bold]%}"
 
 #⬆ ⇪ ⇮ ➠ ⇡ ⇑ ⇧ ⬀ ⇗ ↥ ↨ ↕ ↗ ↑ ⬍ ⇅
-ZSH_THEME_GIT_PROMPT_AHEAD="%{$FG[077]%}%{$FX[italic]%}↕ %{$FX[no-italic]%}"
+ZSH_THEME_GIT_PROMPT_AHEAD="%{$FG[077]%}(ahead) "
 
 ZSH_THEME_GIT_PROMPT_ADDED="%{$FG[082]%}✚"
 #ZSH_THEME_GIT_PROMPT_MODIFIED="%{$FG[226]%}✎"
