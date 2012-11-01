@@ -9,7 +9,7 @@ alias gup='git fetch && git rebase'
 compdef _git gup=git-fetch
 alias gp='git push'
 compdef _git gp=git-push
-gdv() { git-diff -w "$@" | view - }
+gdv() { git diff -w "$@" | view - }
 compdef _git gdv=git-diff
 alias gc='git commit -v'
 compdef _git gc=git-commit
@@ -52,6 +52,12 @@ alias gsd='git svn dcommit'
 function current_branch() {
   ref=$(git symbolic-ref HEAD 2> /dev/null) || return
   echo ${ref#refs/heads/}
+}
+
+function current_repository() {
+
+  ref=$(git symbolic-ref HEAD 2> /dev/null) || return
+  echo $(git remote -v | cut -d':' -f 2)
 }
 
 # these aliases take advantage of the previous function
