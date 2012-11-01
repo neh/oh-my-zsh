@@ -36,7 +36,7 @@ esac
 RPROMPT='%{$FG[242]%}!%!%{$reset_color%}'
 
 PROMPT_CHAR='⬤'
-SEP_CHAR="%{$FG[239]%}╿"
+SEP_CHAR="%{$FG[239]%}┆"
 
 add-zsh-hook precmd term_width
 function term_width {
