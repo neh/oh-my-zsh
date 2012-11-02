@@ -1,3 +1,56 @@
+function git_prompt_info() {
+  stat=$(git status --porcelain -s -b 2>/dev/null) || return
+  branch=$(current_branch)
+  if [[ $branch == '' ]]; then
+      branch="± $(git show-ref --head -s --abbrev | head -n1 2> /dev/null)";
+  else
+      branch="± ⌥ $branch";
+  fi
+  # Just for fun:
+  if [[ $stat =~ "Initial commit" ]]; then
+      branch="%{$FG[033]%}shiny";
+  fi
+
+  STASH=$(git stash list 2> /dev/null | wc -l)
+  if [[ $STASH -gt 0 ]]; then
+    chars=(¹ ² ³ ⁴ ⁵ ⁶ ⁷ ⁸ ⁹)
+    STASHCOUNT="$chars[$STASH]"
+  fi
+  echo " %{$SEP_CHAR%} $ZSH_THEME_GIT_PROMPT_PREFIX$(parse_git_dirty)$branch$ZSH_THEME_GIT_PROMPT_SUFFIX$STASHCOUNT "
+}
+
+parse_git_dirty() {
+  if [[ -n $(git status -s --untracked-files=no --ignore-submodules=dirty 2> /dev/null) ]]; then
+    echo "$ZSH_THEME_GIT_PROMPT_DIRTY"
+  else
+    echo "$ZSH_THEME_GIT_PROMPT_CLEAN"
+  fi
+}
+
+GIT_DIRTY_COLOR=$FG[133]
+GIT_CLEAN_COLOR=$FG[077]
+GIT_PROMPT_INFO=$FG[077]
+
+ZSH_THEME_GIT_PROMPT_PREFIX="%{$GIT_PROMPT_INFO%}"
+ZSH_THEME_GIT_PROMPT_SUFFIX="%{$FX[no-bold]%}%{$FX[no-italic]%}"
+#ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%}"
+#ZSH_THEME_GIT_PROMPT_CLEAN=" %{$GIT_CLEAN_COLOR%}✔ "
+ZSH_THEME_GIT_PROMPT_CLEAN="%{$GIT_CLEAN_COLOR%}"
+#ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[red]%} ⚡%{$fg[yellow]%}"
+ZSH_THEME_GIT_PROMPT_DIRTY="%{$FX[italic]%}%{$FX[bold]%}"
+
+#⬆ ⇪ ⇮ ➠ ⇡ ⇑ ⇧ ⬀ ⇗ ↥ ↨ ↕ ↗ ↑ ⬍ ⇅
+ZSH_THEME_GIT_PROMPT_AHEAD="%{$FG[077]%}(ahead) "
+
+ZSH_THEME_GIT_PROMPT_ADDED="%{$FG[082]%}✚"
+#ZSH_THEME_GIT_PROMPT_MODIFIED="%{$FG[226]%}✎"
+ZSH_THEME_GIT_PROMPT_MODIFIED=""
+ZSH_THEME_GIT_PROMPT_DELETED="%{$FG[196]%}✖"
+ZSH_THEME_GIT_PROMPT_RENAMED="%{$FG[220]%}➜"
+ZSH_THEME_GIT_PROMPT_UNMERGED="%{$FG[082]%}═"
+ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$FG[220]%}‽"
+
+
 # Background job(s) indicator
 add-zsh-hook precmd jobs_precmd_hook
 jobs_precmd_hook() {
@@ -39,71 +92,26 @@ PROMPT_CHAR='⬤'
 SEP_CHAR="%{$FG[239]%}┆"
 
 # vi mode indicator
-MODE_INDICATOR="%{$FG[226]%}%{$FX[bold]%} :%{$FX[no-bold]%}%{$reset_color%}"
+#MODE_INDICATOR="%{$FG[226]%}%{$FX[bold]%} :%{$FX[no-bold]%}%{$reset_color%}"
 
-add-zsh-hook precmd term_width
-function term_width {
+function prompt_line_1 {
     local TERMWIDTH
 
-    PRE_PROMPT="
+    PROMPT_LINE_1="
 %{$BG[236]%} %{$USER_COLOUR%}%n@%{$HOST_COLOUR%}%m %{$SEP_CHAR%} %{$PWD_COLOUR%}%4(c.…/.)%3c$(git_prompt_info)$(git_prompt_status)$(git_prompt_ahead)"
-    PROMPT_SIZE=${#${(S%%)${PRE_PROMPT}//(\%([KF1]|)\{*\}|\%[Bbkf])}}
-    PROMPT_LINE2="
-%{$reset_color%}%{$FX[bold]%}%{$FG[196]%}%(?..%?%{$FX[reset]%})%{$reset_color%} $BG_JOBS$PROMPT_CHAR %{$reset_color%}%{$(vi_mode_prompt_info)%}"
+    PROMPT_SIZE=${#${(S%%)${PROMPT_LINE_1}//(\%([KF1]|)\{*\}|\%[Bbkf])}}
 
     (( TERMWIDTH = ${COLUMNS} - ${PROMPT_SIZE} + 1))
     FILL_SPACES="${(l.$TERMWIDTH.. .)}"
-    PROMPT="$PRE_PROMPT$FILL_SPACES$PROMPT_LINE2"
+    #echo "$PROMPT_LINE_1$FILL_SPACES$PROMPT_LINE_2$(vi_mode_prompt_info)"
+    echo "$PROMPT_LINE_1$FILL_SPACES"
+    #PROMPT='$PROMPT_LINE_1$FILL_SPACES$PROMPT_LINE_2$(vi_mode_prompt_info)'
 }
+PROMPT_LINE_2="
+%{$reset_color%}%{$FX[bold]%}%{$FG[196]%}%(?..%?%{$FX[reset]%})%{$reset_color%} $BG_JOBS$PROMPT_CHAR %{$reset_color%}"
 
-function git_prompt_info() {
-  stat=$(git status --porcelain -s -b 2>/dev/null) || return
-  branch=$(current_branch)
-  if [[ $branch == '' ]]; then
-      branch="± $(git show-ref --head -s --abbrev | head -n1 2> /dev/null)";
-  else
-      branch="± ⌥ $branch";
-  fi
-  # Just for fun:
-  if [[ $stat =~ "Initial commit" && $branch == 'master' ]]; then
-      branch="%{$FG[033]%}shiny%{$reset_color%}";
-  fi
-
-  STASH=$(git stash list 2> /dev/null | wc -l)
-  if [[ $STASH -gt 0 ]]; then
-    chars=(¹ ² ³ ⁴ ⁵ ⁶ ⁷ ⁸ ⁹)
-    STASHCOUNT="$chars[$STASH]"
-  fi
-  echo " %{$SEP_CHAR%} $ZSH_THEME_GIT_PROMPT_PREFIX$(parse_git_dirty)$branch$ZSH_THEME_GIT_PROMPT_SUFFIX$STASHCOUNT "
+add-zsh-hook precmd recalc_prompt
+function recalc_prompt {
+    export PROMPT="$(prompt_line_1)%{$PROMPT_LINE_2%}$(vi_mode_prompt_info)"
 }
-
-parse_git_dirty() {
-  if [[ -n $(git status -s --untracked-files=no --ignore-submodules=dirty 2> /dev/null) ]]; then
-    echo "$ZSH_THEME_GIT_PROMPT_DIRTY"
-  else
-    echo "$ZSH_THEME_GIT_PROMPT_CLEAN"
-  fi
-}
-
-GIT_DIRTY_COLOR=$FG[133]
-GIT_CLEAN_COLOR=$FG[077]
-GIT_PROMPT_INFO=$FG[077]
-
-ZSH_THEME_GIT_PROMPT_PREFIX="%{$GIT_PROMPT_INFO%}"
-ZSH_THEME_GIT_PROMPT_SUFFIX="%{$FX[no-bold]%}%{$FX[no-italic]%}"
-#ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%}"
-#ZSH_THEME_GIT_PROMPT_CLEAN=" %{$GIT_CLEAN_COLOR%}✔ "
-ZSH_THEME_GIT_PROMPT_CLEAN="%{$GIT_CLEAN_COLOR%}"
-#ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[red]%} ⚡%{$fg[yellow]%}"
-ZSH_THEME_GIT_PROMPT_DIRTY="%{$FX[italic]%}%{$FX[bold]%}"
-
-#⬆ ⇪ ⇮ ➠ ⇡ ⇑ ⇧ ⬀ ⇗ ↥ ↨ ↕ ↗ ↑ ⬍ ⇅
-ZSH_THEME_GIT_PROMPT_AHEAD="%{$FG[077]%}(ahead) "
-
-ZSH_THEME_GIT_PROMPT_ADDED="%{$FG[082]%}✚"
-#ZSH_THEME_GIT_PROMPT_MODIFIED="%{$FG[226]%}✎"
-ZSH_THEME_GIT_PROMPT_MODIFIED=""
-ZSH_THEME_GIT_PROMPT_DELETED="%{$FG[196]%}✖"
-ZSH_THEME_GIT_PROMPT_RENAMED="%{$FG[220]%}➜"
-ZSH_THEME_GIT_PROMPT_UNMERGED="%{$FG[082]%}═"
-ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$FG[220]%}‽"
+PROMPT="$(prompt_line_1)%{$PROMPT_LINE_2%}$(vi_mode_prompt_info)"
