@@ -38,6 +38,7 @@ RPROMPT='%{$FG[242]%}!%!%{$reset_color%}'
 PROMPT_CHAR='⬤'
 SEP_CHAR="%{$FG[239]%}•"
 
+FILL_CHAR="─"
 FILL_FG="$FG[238]"
 FILL_BG=""
 
@@ -46,14 +47,14 @@ function term_width {
     local TERMWIDTH
 
     PRE_PROMPT="
-%{$FILL_FG%}─ %{$USER_COLOUR%}%n@%{$HOST_COLOUR%}%m %{$SEP_CHAR%} %{$PWD_COLOUR%}%4(c.…/.)%3c$(git_prompt_info)$(git_prompt_status)$(git_prompt_ahead)%{$FILL_FG%}"
+%{$FILL_FG%}%{$FILL_CHAR%} %{$USER_COLOUR%}%n@%{$HOST_COLOUR%}%m %{$SEP_CHAR%} %{$PWD_COLOUR%}%4(c.…/.)%3c$(git_prompt_info)$(git_prompt_status)$(git_prompt_ahead)%{$FILL_FG%}"
     PROMPT_SIZE=${#${(S%%)${PRE_PROMPT}//(\%([KF1]|)\{*\}|\%[Bbkf])}}
     PROMPT_LINE2="
 %{$reset_color%}%{$FX[bold]%}%{$FG[196]%}%(?..%?%{$FX[reset]%})%{$reset_color%} $BG_JOBS$PROMPT_CHAR %{$reset_color%}"
 
-    (( TERMWIDTH = ${COLUMNS} - ${PROMPT_SIZE} + 1))
-    FILL_SPACES="${(l.$TERMWIDTH..─.)}"
-    PROMPT="$PRE_PROMPT$FILL_SPACES$PROMPT_LINE2"
+    (( TERMWIDTH = ${COLUMNS} - ${PROMPT_SIZE} ))
+    FILL="\${(l.$TERMWIDTH..${FILL_CHAR}.)}"
+    PROMPT="$PRE_PROMPT$FILL$PROMPT_LINE2"
 }
 
 function git_prompt_info() {
