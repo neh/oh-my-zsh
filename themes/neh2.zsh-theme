@@ -47,7 +47,7 @@ function term_width {
     local TERMWIDTH
 
     PRE_PROMPT="
-%{$FILL_FG%}%{$FILL_CHAR%} %{$USER_COLOUR%}%n@%{$HOST_COLOUR%}%m %{$SEP_CHAR%} %{$PWD_COLOUR%}%4(c.…/.)%3c$(git_prompt_info)$(git_prompt_status)$(git_prompt_ahead)%{$FILL_FG%}"
+%{$FILL_FG%}%{$FILL_CHAR%} %{$USER_COLOUR%}%n@%{$HOST_COLOUR%}%m %{$SEP_CHAR%} %{$PWD_COLOUR%}%4(c.…/.)%3c $(git_prompt_info)$(git_prompt_status)$(git_prompt_ahead)%{$FILL_FG%}"
     PROMPT_SIZE=${#${(S%%)${PRE_PROMPT}//(\%([KF1]|)\{*\}|\%[Bbkf])}}
     PROMPT_LINE2="
 %{$reset_color%}%{$FX[bold]%}%{$FG[196]%}%(?..%?%{$FX[reset]%})%{$reset_color%} $BG_JOBS$PROMPT_CHAR %{$reset_color%}"
@@ -75,7 +75,7 @@ function git_prompt_info() {
     chars=(¹ ² ³ ⁴ ⁵ ⁶ ⁷ ⁸ ⁹)
     STASHCOUNT="$chars[$STASH]"
   fi
-  echo " %{$SEP_CHAR%} $ZSH_THEME_GIT_PROMPT_PREFIX$(parse_git_dirty)$branch$ZSH_THEME_GIT_PROMPT_SUFFIX$STASHCOUNT "
+  echo "%{$SEP_CHAR%} $ZSH_THEME_GIT_PROMPT_PREFIX$(parse_git_dirty)$branch$ZSH_THEME_GIT_PROMPT_SUFFIX$STASHCOUNT "
 }
 
 parse_git_dirty() {
