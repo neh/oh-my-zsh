@@ -26,12 +26,6 @@ function pwd_colour {
 # change username color if root
 if [ $UID -eq 0 ]; then USER_COLOUR="$FG[196]"; else USER_COLOUR="$FG[245]"; fi
 
-# change hostname color if in ssh connection
-case "$SSH_CONNECTION" in
-    '') HOST_COLOUR="";;
-    *) HOST_COLOUR="$FG[220]";;
-esac
-
 
 RPROMPT='%{$FG[242]%}!%!%{$reset_color%}'
 
@@ -62,7 +56,11 @@ function term_width {
     fi
 
     PR_PATH="%{$PWD_COLOUR%}%4(c.…/.)%3c"
-    PR_USER_HOST="%{$USER_COLOUR%}%n@%{$HOST_COLOUR%}%m"
+
+    PR_USER_HOST="%{$USER_COLOUR%}%n"
+    if [[ $SSH_CONNECTION != '' ]]; then
+        PR_USER_HOST="$PR_USER_HOST@%m"
+    fi
 
     PROMPT_LINE1="
 %{$FILL_FG%}%{$FILL_CHAR%} %{$PR_PATH%}%{$PR_GIT_PROMPT_INFO%}%{$PR_USER_HOST%} %{$FILL_FG%}"
