@@ -46,8 +46,14 @@ add-zsh-hook precmd term_width
 function term_width {
     local TERMWIDTH
 
+    MGPI=$(git_prompt_info)
+    MGPS=$(git_prompt_status)
+    MGPA=$(git_prompt_ahead)
+    #if [[ $MGPS != '' ]]; then $MGPI="$MGPI $MGPS"; fi
+    #if [[ $MGPA != '' ]]; then $MGPI="$MGPI $MGPA"; fi
+
     PRE_PROMPT="
-%{$FILL_FG%}%{$FILL_CHAR%} %{$USER_COLOUR%}%n@%{$HOST_COLOUR%}%m %{$SEP_CHAR%} %{$PWD_COLOUR%}%4(c.…/.)%3c $(git_prompt_info)$(git_prompt_status)$(git_prompt_ahead)%{$FILL_FG%}"
+%{$FILL_FG%}%{$FILL_CHAR%} %{$PWD_COLOUR%}%4(c.…/.)%3c %{$MGPI%} %{$SEP_CHAR%} %{$USER_COLOUR%}%n@%{$HOST_COLOUR%}%m %{$FILL_FG%}"
     PROMPT_SIZE=${#${(S%%)${PRE_PROMPT}//(\%([KF1]|)\{*\}|\%[Bbkf])}}
     PROMPT_LINE2="
 %{$reset_color%}%{$FX[bold]%}%{$FG[196]%}%(?..%?%{$FX[reset]%})%{$reset_color%} $BG_JOBS$PROMPT_CHAR %{$reset_color%}"
@@ -99,7 +105,7 @@ ZSH_THEME_GIT_PROMPT_CLEAN="%{$GIT_CLEAN_COLOR%}"
 ZSH_THEME_GIT_PROMPT_DIRTY="%{$FX[italic]%}%{$FX[bold]%}"
 
 #⬆ ⇪ ⇮ ➠ ⇡ ⇑ ⇧ ⬀ ⇗ ↥ ↨ ↕ ↗ ↑ ⬍ ⇅
-ZSH_THEME_GIT_PROMPT_AHEAD="%{$FG[077]%}(ahead) "
+ZSH_THEME_GIT_PROMPT_AHEAD="%{$FG[077]%}(ahead)"
 
 ZSH_THEME_GIT_PROMPT_ADDED="%{$FG[082]%}✚"
 #ZSH_THEME_GIT_PROMPT_MODIFIED="%{$FG[226]%}✎"
