@@ -49,8 +49,8 @@ function term_width {
     MGPI=$(git_prompt_info)
     MGPS=$(git_prompt_status)
     MGPA=$(git_prompt_ahead)
-    #if [[ $MGPS != '' ]]; then $MGPI="$MGPI $MGPS"; fi
-    #if [[ $MGPA != '' ]]; then $MGPI="$MGPI $MGPA"; fi
+    if [[ $MGPS != '' ]]; then MGPI="$MGPI $MGPS"; fi
+    if [[ $MGPA != '' ]]; then MGPI="$MGPI $MGPA"; fi
 
     PRE_PROMPT="
 %{$FILL_FG%}%{$FILL_CHAR%} %{$PWD_COLOUR%}%4(c.…/.)%3c %{$SEP_CHAR%} %{$MGPI%} %{$SEP_CHAR%} %{$USER_COLOUR%}%n@%{$HOST_COLOUR%}%m %{$FILL_FG%}"
