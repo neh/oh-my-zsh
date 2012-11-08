@@ -36,7 +36,7 @@ esac
 RPROMPT='%{$FG[242]%}!%!%{$reset_color%}'
 
 PROMPT_CHAR='⬤'
-SEP_CHAR="%{$FG[239]%}•"
+SEP_CHAR="%{$FG[239]%}─"
 
 FILL_CHAR="─"
 FILL_FG="$FG[238]"
