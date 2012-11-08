@@ -47,18 +47,23 @@ function term_width {
     local TERMWIDTH
 
     MGPI=$(git_prompt_info)
-    MGPS=$(git_prompt_status)
-    MGPA=$(git_prompt_ahead)
-    if [[ $MGPS != '' ]]; then MGPI="$MGPI $MGPS"; fi
-    if [[ $MGPA != '' ]]; then MGPI="$MGPI $MGPA"; fi
+    if [[ $MGPI != '' ]]; then
+        MGPS=$(git_prompt_status)
+        MGPA=$(git_prompt_ahead)
+        if [[ $MGPS != '' ]]; then MGPI="$MGPI $MGPS"; fi
+        if [[ $MGPA != '' ]]; then MGPI="$MGPI $MGPA"; fi
+        MGPI=" %{$SEP_CHAR%} $MGPI %{$SEP_CHAR%} "
+    else
+        MGPI=" %{$SEP_CHAR%} "
+    fi
 
     PRE_PROMPT="
-%{$FILL_FG%}%{$FILL_CHAR%} %{$PWD_COLOUR%}%4(c.…/.)%3c %{$SEP_CHAR%} %{$MGPI%} %{$SEP_CHAR%} %{$USER_COLOUR%}%n@%{$HOST_COLOUR%}%m %{$FILL_FG%}"
+%{$FILL_FG%}%{$FILL_CHAR%} %{$PWD_COLOUR%}%4(c.…/.)%3c%{$MGPI%}%{$USER_COLOUR%}%n@%{$HOST_COLOUR%}%m %{$FILL_FG%}"
     PROMPT_SIZE=${#${(S%%)${PRE_PROMPT}//(\%([KF1]|)\{*\}|\%[Bbkf])}}
     PROMPT_LINE2="
 %{$reset_color%}%{$FX[bold]%}%{$FG[196]%}%(?..%?%{$FX[reset]%})%{$reset_color%} $BG_JOBS$PROMPT_CHAR %{$reset_color%}"
 
-    (( TERMWIDTH = ${COLUMNS} - ${PROMPT_SIZE} ))
+    (( TERMWIDTH = ${COLUMNS} - ${PROMPT_SIZE} - 1 ))
     FILL="\${(l.$TERMWIDTH..${FILL_CHAR}.)}"
     PROMPT="$PRE_PROMPT$FILL$PROMPT_LINE2"
 }
