@@ -26,8 +26,36 @@ function pwd_colour {
 # change username color if root
 if [ $UID -eq 0 ]; then USER_COLOUR="$FG[196]"; else USER_COLOUR="$FG[245]"; fi
 
+function battery_gauge {
+    if [[ -x '/usr/bin/ibam' ]]; then
+        BATT_STATE="$(ibam --percentbattery)"
+        BATT_PERCENT="${BATT_STATE[(f)1][(w)-2]}"
+        BATT_TIME="${BATT_STATE[(f)2][(w)-1]}"
+        (( BATT_USED_PERCENT = 100 - $BATT_PERCENT ))
+        if [[ $BATT_USED_PERCENT -gt 80 ]]; then
+            BATT_COLOUR="$FG[196]"
+        elif [[ $BATT_USED_PERCENT -gt 60 ]]; then
+            BATT_COLOUR="$FG[226]"
+        else
+            BATT_COLOUR="$FG[245]"
+        fi
 
-RPROMPT='%{$FG[242]%}!%!%{$reset_color%}'
+        BATT_A=$(printf "%.0f" $(( $BATT_PERCENT / 10.0 )) )
+        BATT_B=$(printf "%.0f" $(( $BATT_A / 2 )) )
+        (( BATT_C = $(( 10 - BATT_A  )) / 2 ))
+        BATT_GAUGE="${(l.$BATT_B..●.)}"
+        if [[ $(( $BATT_B + $BATT_C )) -lt 5 ]]; then
+            BATT_GAUGE="$BATT_GAUGE◐"
+        fi
+        BATT_GAUGE="$BATT_GAUGE${(l.$BATT_C..◌.)}"
+
+        echo "%{$BATT_COLOUR%}$BATT_GAUGE"
+    else
+        echo ''
+    fi
+}
+
+RPROMPT='$(battery_gauge) %{$FG[242]%}!%!%{$reset_color%}'
 
 PROMPT_CHAR='⬤'
 SEP_CHAR="%{$FG[239]%}─"
