@@ -90,8 +90,13 @@ function term_width {
         PR_USER_HOST="$PR_USER_HOST@%m"
     fi
 
+    KNIFE_BLOCK_CURRENT=""
+    if [[ -h $HOME/.chef/knife.rb ]]; then
+      KNIFE_BLOCK_CURRENT="%{$FG[077]%}%{$FX[italic]%}⚔%{$FX[no-italic]%} $(ls -l $HOME/.chef/knife.rb | sed -r -e 's#^.*knife-(.+).rb$#\1#') %{$SEP_CHAR%} "
+    fi
+
     PROMPT_LINE1="
-%{$FILL_FG%}%{$FILL_CHAR%} %{$PR_PATH%}%{$PR_GIT_PROMPT_INFO%}%{$PR_USER_HOST%} %{$FILL_FG%}"
+%{$FILL_FG%}%{$FILL_CHAR%} %{$PR_PATH%}%{$PR_GIT_PROMPT_INFO%}%{$KNIFE_BLOCK_CURRENT%}%{$PR_USER_HOST%} %{$FILL_FG%}"
     PROMPT_LINE1_LENGTH=${#${(S%%)${PROMPT_LINE1}//(\%([KF1]|)\{*\}|\%[Bbkf])}}
     PROMPT_LINE2="
 %{$reset_color%}%{$FX[bold]%}%{$FG[196]%}%(?..%?%{$FX[reset]%})%{$reset_color%} $BG_JOBS$PROMPT_CHAR %{$reset_color%}"
