@@ -71,12 +71,8 @@ function term_width {
     PR_GIT_PROMPT_INFO=$(git_prompt_info)
     if [[ $PR_GIT_PROMPT_INFO != '' ]]; then
         PR_GIT_PROMPT_STATUS=$(git_prompt_status)
-        PR_GIT_PROMPT_AHEAD=$(git_prompt_ahead)
         if [[ $PR_GIT_PROMPT_STATUS != '' ]]; then
             PR_GIT_PROMPT_INFO="$PR_GIT_PROMPT_INFO $PR_GIT_PROMPT_STATUS";
-        fi
-        if [[ $PR_GIT_PROMPT_AHEAD != '' ]]; then
-            PR_GIT_PROMPT_INFO="$PR_GIT_PROMPT_INFO $PR_GIT_PROMPT_AHEAD";
         fi
         PR_GIT_PROMPT_INFO=" %{$SEP_CHAR%} $PR_GIT_PROMPT_INFO %{$SEP_CHAR%} "
     else
