@@ -40,7 +40,7 @@ function show_timer() {
     [[ $days > 0 ]] && timer_string+="${days}d"
     [[ $hours > 0 ]] && timer_string+="${hours}h"
     [[ $minutes > 0 ]] && timer_string+="${minutes}m"
-    timer_show="${timer_string}${seconds}s"
+    timer_show="%{$FG[249]%}${timer_string}${seconds}s%{$reset_color%}"
     unset timer
   else
     timer_show=""
