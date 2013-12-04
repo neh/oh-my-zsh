@@ -23,6 +23,21 @@ function pwd_colour {
     fi
 }
 
+add-zsh-hook preexec cmd_timer
+function cmd_timer() {
+    timer=${timer:-$SECONDS}
+}
+
+add-zsh-hook precmd show_timer
+function show_timer() {
+  if [ $timer ]; then
+    timer_show=" $(($SECONDS - $timer))s"
+    unset timer
+  else
+    timer_show=""
+  fi
+}
+
 # change username color if root
 if [ $UID -eq 0 ]; then USER_COLOUR="$FG[196]"; else USER_COLOUR="$FG[245]"; fi
 
@@ -95,7 +110,7 @@ function term_width {
 %{$FILL_FG%}%{$FILL_CHAR%} %{$PR_PATH%}%{$PR_GIT_PROMPT_INFO%}%{$KNIFE_BLOCK_CURRENT%}%{$PR_USER_HOST%} %{$FILL_FG%}"
     PROMPT_LINE1_LENGTH=${#${(S%%)${PROMPT_LINE1}//(\%([KF1]|)\{*\}|\%[Bbkf])}}
     PROMPT_LINE2="
-%{$reset_color%}%{$FX[bold]%}%{$FG[196]%}%(?..%?%{$FX[reset]%})%{$reset_color%} $BG_JOBS$PROMPT_CHAR %{$reset_color%}"
+%{$reset_color%}%{$FX[bold]%}%{$FG[196]%}%(?..%?%{$FX[reset]%})%{$reset_color%}${timer_show} $BG_JOBS$PROMPT_CHAR %{$reset_color%}"
 
     (( TERMWIDTH = ${COLUMNS} - ${PROMPT_LINE1_LENGTH} - 1 ))
     FILL="\${(l.$TERMWIDTH..${FILL_CHAR}.)}"
