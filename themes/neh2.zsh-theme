@@ -31,7 +31,16 @@ function cmd_timer() {
 add-zsh-hook precmd show_timer
 function show_timer() {
   if [ $timer ]; then
-    timer_show=" $(($SECONDS - $timer))s"
+    (( duration = $SECONDS - $timer ))
+    (( days = $duration / 86400 ))
+    (( hours = $duration % 86400 / 3600 ))
+    (( minutes = $duration % 86400 % 3600 / 60 ))
+    (( seconds = $duration % 86400 % 3600 % 60 ))
+    local timer_string=' '
+    [[ $days > 0 ]] && timer_string+="${days}d"
+    [[ $hours > 0 ]] && timer_string+="${hours}h"
+    [[ $minutes > 0 ]] && timer_string+="${minutes}m"
+    timer_show="${timer_string}${seconds}s"
     unset timer
   else
     timer_show=""
