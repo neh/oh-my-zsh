@@ -110,8 +110,14 @@ function term_width {
         PR_USER_HOST="$PR_USER_HOST@%m"
     fi
 
+    if [[ $OP_ENV != '' ]]; then
+      PR_OP_ENV=" %{$SEP_CHAR%} %{$FG[226]%}%{$OP_ENV%}"
+    else
+      PR_OP_ENV=""
+    fi
+
     PROMPT_LINE1="
-%{$FILL_FG%}%{$FILL_CHAR%} %{$PR_PATH%}%{$PR_GIT_PROMPT_INFO%}%{$PR_USER_HOST%} %{$FILL_FG%}"
+%{$FILL_FG%}%{$FILL_CHAR%} %{$PR_PATH%}%{$PR_GIT_PROMPT_INFO%}%{$PR_USER_HOST%}%{$PR_OP_ENV%} %{$FILL_FG%}"
     PROMPT_LINE1_LENGTH=${#${(S%%)${PROMPT_LINE1}//(\%([KF1]|)\{*\}|\%[Bbkf])}}
     PROMPT_LINE2="
 %{$reset_color%}%{$FX[bold]%}%{$FG[196]%}%(?..%?%{$FX[reset]%})%{$reset_color%}${timer_show} $BG_JOBS$PROMPT_CHAR %{$reset_color%}"
