@@ -1,3 +1,5 @@
+autoload -U add-zsh-hook
+
 # Background job(s) indicator
 add-zsh-hook precmd jobs_precmd_hook
 jobs_precmd_hook() {
