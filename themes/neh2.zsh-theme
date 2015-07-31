@@ -122,11 +122,17 @@ function term_width {
 %{$FILL_FG%}%{$FILL_CHAR%} %{$PR_PATH%}%{$PR_GIT_PROMPT_INFO%}%{$PR_USER_HOST%}%{$PR_OP_ENV%} %{$FILL_FG%}"
     PROMPT_LINE1_LENGTH=${#${(S%%)${PROMPT_LINE1}//(\%([KF1]|)\{*\}|\%[Bbkf])}}
     PROMPT_LINE2="
-%{$reset_color%}%{$FX[bold]%}%{$FG[196]%}%(?..%?%{$FX[reset]%})%{$reset_color%}${timer_show} $BG_JOBS$PROMPT_CHAR %{$reset_color%}"
+$FG[245]%D{%K:%M:%S}%{$reset_color%}%{$FX[bold]%}%{$FG[196]%}%(?.. %?%{$FX[reset]%})%{$reset_color%}${timer_show} $BG_JOBS$PROMPT_CHAR %{$reset_color%}"
 
     (( TERMWIDTH = ${COLUMNS} - ${PROMPT_LINE1_LENGTH} - 1 ))
     FILL="\${(l.$TERMWIDTH..${FILL_CHAR}.)}"
     PROMPT="$PROMPT_LINE1$FILL$PROMPT_LINE2"
+}
+
+# Enables a running clock in the prompt
+TMOUT=1
+TRAPALRM() {
+  zle reset-prompt
 }
 
 function git_prompt_info() {
