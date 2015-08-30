@@ -134,13 +134,13 @@ function git_prompt_info() {
   stat=$(git status --porcelain -s -b 2>/dev/null) || return
   branch=$(current_branch)
   if [[ $branch == '' ]]; then
-      branch="± $(git show-ref --head -s --abbrev | head -n1 2> /dev/null)";
+      branch="$(git show-ref --head -s --abbrev | head -n1 2> /dev/null)";
   else
-      branch="±  $branch";
+      branch=" $branch";
   fi
   # Just for fun:
   if [[ $stat =~ "Initial commit on master" ]]; then
-      branch="± %{$FG[033]%}shiny%{$reset_color%}";
+      branch="%{$FG[033]%}shiny%{$reset_color%}";
   fi
 
   STASH=$(git stash list 2> /dev/null | wc -l)
