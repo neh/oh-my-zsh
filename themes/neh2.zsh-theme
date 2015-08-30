@@ -81,7 +81,7 @@ function battery_gauge {
     fi
 }
 
-RPROMPT='$(battery_gauge)%{$reset_color%}'
+# RPROMPT='$(battery_gauge)%{$reset_color%}'
 
 # 
 PROMPT_CHAR=' '
