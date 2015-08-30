@@ -136,7 +136,7 @@ function git_prompt_info() {
   if [[ $branch == '' ]]; then
       branch="± $(git show-ref --head -s --abbrev | head -n1 2> /dev/null)";
   else
-      branch="± ⌥ $branch";
+      branch="±  $branch";
   fi
   # Just for fun:
   if [[ $stat =~ "Initial commit on master" ]]; then
